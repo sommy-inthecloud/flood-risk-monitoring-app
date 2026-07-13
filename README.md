@@ -1,17 +1,60 @@
-# flood_monitoring_app
+# Flood Risk Prediction and Monitoring Mobile Application 🌧️
 
-A new Flutter project.
 
-## Getting Started
+A Flutter-based mobile application designed to predict flood risks and provide early warning information to users in Nigeria using machine learning and cloud technologies.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Project Overview
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flooding is a major environmental challenge in Nigeria, affecting communities, infrastructure, and lives. This application provides users with flood risk predictions, weather information, alerts, and safety recommendations.
+
+
+## Features
+
+
+- User authentication
+- Real-time flood risk monitoring
+- Machine learning-based flood prediction
+- Weather data integration
+- Interactive flood risk map
+- Flood reporting system
+- Emergency notifications
+- Safety guidelines
+
+
+## Technology Stack
+
+
+### Mobile Application
+- Flutter
+- Dart
+
+
+### Backend
+- Python FastAPI
+
+
+### Machine Learning
+- Python
+- Scikit-learn
+- Pandas
+- NumPy
+
+
+### Cloud & DevOps
+- AWS
+- GitHub Actions
+- CI/CD
+
+
+## Project Status
+
+
+🚧 Currently under development
+
+
+## Author
+
+
+Chisomaga Anyasodor 
