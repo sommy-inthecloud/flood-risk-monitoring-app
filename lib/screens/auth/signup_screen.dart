@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'signup_screen.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_text_styles.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +16,30 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
 
           children: [
-            const Icon(Icons.water_drop, size: 80, color: AppColors.primary),
+            const Icon(Icons.person_add, size: 80, color: AppColors.primary),
 
             const SizedBox(height: 20),
 
-            const Text("Welcome Back", style: AppTextStyles.heading),
+            const Text("Create Account", style: AppTextStyles.heading),
 
             const SizedBox(height: 10),
 
             const Text(
-              "Login to continue monitoring flood risks",
+              "Join FloodGuard and stay informed",
               style: AppTextStyles.body,
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 35),
+
+            TextField(
+              decoration: const InputDecoration(
+                labelText: "Full Name",
+                prefixIcon: Icon(Icons.person),
+              ),
+            ),
+
+            const SizedBox(height: 15),
 
             TextField(
               decoration: const InputDecoration(
@@ -40,7 +48,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             TextField(
               obscureText: true,
@@ -55,20 +63,7 @@ class LoginScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
 
-              child: const Text("LOGIN", style: AppTextStyles.button),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignupScreen()),
-                );
-              },
-
-              child: const Text("Don't have an account? Sign Up"),
+              child: const Text("CREATE ACCOUNT", style: AppTextStyles.button),
             ),
           ],
         ),
