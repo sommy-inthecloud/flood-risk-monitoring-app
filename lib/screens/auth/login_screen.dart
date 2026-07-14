@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'signup_screen.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_text_styles.dart';
+import '../dashboard/dashboard_screen.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -44,6 +45,7 @@ class LoginScreen extends StatelessWidget {
 
             TextField(
               obscureText: true,
+
               decoration: const InputDecoration(
                 labelText: "Password",
                 prefixIcon: Icon(Icons.lock),
@@ -52,10 +54,22 @@ class LoginScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            ElevatedButton(
-              onPressed: () {},
+            SizedBox(
+              width: double.infinity,
 
-              child: const Text("LOGIN", style: AppTextStyles.button),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardScreen(),
+                    ),
+                  );
+                },
+
+                child: const Text("LOGIN", style: AppTextStyles.button),
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -64,6 +78,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(builder: (context) => const SignupScreen()),
                 );
               },
