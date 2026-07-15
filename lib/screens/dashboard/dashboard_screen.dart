@@ -38,22 +38,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
           });
         },
 
+        type: BottomNavigationBarType.fixed,
+
         selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+
+        backgroundColor: Colors.white,
 
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-
           BottomNavigationBarItem(icon: Icon(Icons.report), label: "Report"),
-
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
   }
 }
-
 // ---------------- HOME SCREEN ----------------
 
 class HomeScreen extends StatelessWidget {
