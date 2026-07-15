@@ -5,6 +5,7 @@ import '../report/report_screen.dart';
 import '../profile/profile_screen.dart';
 import '../../models/weather_model.dart';
 import '../../services/weather_service.dart';
+import '../../services/location_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -70,12 +71,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<WeatherModel> weather;
+  Future<void> getLocationWeather() async {
+    final position = await LocationService().getCurrentLocation();
+
+    setState(() {
+      weather = WeatherService().getWeather(
+        position.latitude,
+        position.longitude,
+      );
+    });
+  }
 
   @override
   void initState() {
     super.initState();
 
-    weather = WeatherService().getWeather("Lagos");
+    getLocationWeather();
   }
 
   @override
