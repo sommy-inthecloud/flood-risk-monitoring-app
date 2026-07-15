@@ -48,7 +48,7 @@ class _ReportScreenState extends State<ReportScreen> {
             const SizedBox(height: 20),
 
             DropdownButtonFormField<String>(
-              value: severity,
+              initialValue: severity,
               decoration: const InputDecoration(
                 labelText: "Severity",
                 border: OutlineInputBorder(),
