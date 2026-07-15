@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../map/map_screen.dart';
 import '../report/report_screen.dart';
 import '../profile/profile_screen.dart';
+import '../../models/weather_model.dart';
+import '../../services/weather_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -59,8 +61,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 // ---------------- HOME SCREEN ----------------
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<WeatherModel> weather;
+
+  @override
+  void initState() {
+    super.initState();
+
+    weather = WeatherService().getWeather("Lagos");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,33 +155,58 @@ class HomeScreen extends StatelessWidget {
 
               const Text(
                 "Weather Today",
-
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 15),
 
-              Card(
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.cloud,
+              FutureBuilder<WeatherModel>(
+                future: weather,
 
-                    size: 40,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    );
+                  }
 
-                    color: Colors.blue,
-                  ),
+                  if (snapshot.hasError) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Unable to load weather"),
+                      ),
+                    );
+                  }
 
-                  title: const Text(
-                    "28°C",
+                  final data = snapshot.data!;
 
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.cloud,
+                        size: 40,
+                        color: Colors.blue,
+                      ),
 
-                  subtitle: const Text("Humidity: 78%\nRainfall: Moderate"),
-                ),
+                      title: Text(
+                        "${data.temperature.toStringAsFixed(1)}°C",
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      subtitle: Text(
+                        "Humidity: ${data.humidity}%\n${data.description}",
+                      ),
+                    ),
+                  );
+                },
               ),
-
-              const SizedBox(height: 25),
 
               const Text(
                 "Safety Tips",
