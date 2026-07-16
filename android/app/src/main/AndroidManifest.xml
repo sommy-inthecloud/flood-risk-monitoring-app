@@ -9,7 +9,7 @@
 
 
     <application
-        android:label="flood_monitoring_app"
+        android:label="FloodGuard"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

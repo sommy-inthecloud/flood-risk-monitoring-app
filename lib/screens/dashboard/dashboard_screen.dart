@@ -74,6 +74,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<WeatherModel> weather;
 
+  String locationName = "Getting location...";
+  String lastUpdated = "";
+
   String floodRisk = "Calculating...";
 
   String riskProbability = "";
@@ -86,15 +89,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getLocationWeather() async {
-    final position = await LocationService().getCurrentLocation();
+    try {
+      final position = await LocationService().getCurrentLocation();
 
-    setState(() {
-      weather = WeatherService().getWeather(
-        position.latitude,
+      setState(() {
+        weather = WeatherService().getWeather(
+          position.latitude,
+          position.longitude,
+        );
 
-        position.longitude,
-      );
-    });
+        locationName = "Current Location";
+
+        lastUpdated = DateTime.now().toString().substring(0, 16);
+      });
+    } catch (e) {
+      setState(() {
+        locationName = "Location unavailable";
+
+        lastUpdated = "";
+      });
+    }
   }
 
   void calculateFloodRisk(WeatherModel data) {
@@ -132,7 +146,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 5),
 
-              const Text("Chisom", style: TextStyle(fontSize: 20)),
+              Text("Chisom", style: const TextStyle(fontSize: 20)),
+
+              const SizedBox(height: 5),
+
+              Row(
+                children: [
+                  const Icon(Icons.location_on, color: Colors.blue, size: 18),
+
+                  const SizedBox(width: 5),
+
+                  Text(
+                    locationName,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
 
               const SizedBox(height: 25),
 
@@ -200,13 +229,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 future: weather,
 
                 builder: (context, snapshot) {
+                  // Loading state
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+
+                        child: Column(
+                          children: [
+                            const CircularProgressIndicator(),
+
+                            const SizedBox(height: 15),
+
+                            Text(
+                              "Getting latest weather data...",
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
 
+                  // Error state
+
                   if (snapshot.hasError) {
-                    return const Text("Unable to load weather");
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.cloud_off,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            const Text(
+                              "Unable to load weather",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  getLocationWeather();
+                                });
+                              },
+
+                              icon: const Icon(Icons.refresh),
+
+                              label: const Text("Retry"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
+
+                  // Successful data
 
                   final data = snapshot.data!;
 
@@ -214,8 +304,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return Card(
                     child: ListTile(
-                      leading: const Icon(
-                        Icons.cloud,
+                      leading: Icon(
+                        data.description.toLowerCase().contains("rain")
+                            ? Icons.cloudy_snowing
+                            : Icons.wb_sunny,
 
                         size: 40,
 
@@ -238,6 +330,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                "Updated: $lastUpdated",
+                style: const TextStyle(color: Colors.grey),
               ),
 
               const SizedBox(height: 20),

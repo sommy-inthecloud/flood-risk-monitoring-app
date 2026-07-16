@@ -65,7 +65,9 @@ class _ReportScreenState extends State<ReportScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Report uploaded successfully: $imageName")),
+        SnackBar(
+          content: Text("Flood report submitted successfully ✅: $imageName"),
+        ),
       );
 
       descriptionController.clear();

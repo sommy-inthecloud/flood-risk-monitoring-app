@@ -37,7 +37,24 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
           final data = snapshot.data!;
 
           if (data.isEmpty) {
-            return const Center(child: Text("No reports found"));
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.assignment_outlined, size: 70, color: Colors.grey),
+                  SizedBox(height: 15),
+                  Text(
+                    "No flood reports yet",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Your submitted reports will appear here",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
           }
 
           return ListView.builder(
