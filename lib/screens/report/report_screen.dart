@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../services/image_service.dart';
 
+import '../../services/upload_service.dart';
+
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
 
@@ -12,11 +14,57 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  final descriptionController = TextEditingController();
+
+  final locationController = TextEditingController();
+
   String severity = "Medium";
 
   File? selectedImage;
 
   final ImageService imageService = ImageService();
+
+  final UploadService uploadService = UploadService();
+
+  bool isUploading = false;
+
+  Future<void> submitReport() async {
+    if (selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a flood image first")),
+      );
+
+      return;
+    }
+
+    setState(() {
+      isUploading = true;
+    });
+
+    try {
+      final imageName = await uploadService.uploadImage(
+        selectedImage!,
+
+        description: descriptionController.text,
+
+        severity: severity,
+
+        location: locationController.text,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Image uploaded successfully: $imageName")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Upload failed: $e")));
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
+    }
+  }
 
   Future<void> pickFloodImage() async {
     final image = await imageService.pickImage();
@@ -98,10 +146,12 @@ class _ReportScreenState extends State<ReportScreen> {
 
             const SizedBox(height: 20),
 
-            const TextField(
+            TextField(
+              controller: descriptionController,
+
               maxLines: 4,
 
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "Describe the situation",
 
                 border: OutlineInputBorder(),
@@ -136,7 +186,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
             const SizedBox(height: 20),
 
-            const TextField(
+            TextField(
+              controller: locationController,
               decoration: InputDecoration(
                 labelText: "Location",
 
@@ -150,17 +201,11 @@ class _ReportScreenState extends State<ReportScreen> {
 
             SizedBox(
               width: double.infinity,
-
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Flood report submitted successfully!"),
-                    ),
-                  );
-                },
-
-                child: const Text("SUBMIT REPORT"),
+                onPressed: isUploading ? null : submitReport,
+                child: isUploading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("SUBMIT REPORT"),
               ),
             ),
           ],
