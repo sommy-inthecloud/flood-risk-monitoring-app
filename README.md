@@ -1,60 +1,56 @@
-# Flood Risk Prediction and Monitoring Mobile Application 🌧️
+# 🌊 FloodGuard
 
+A Flutter-based flood monitoring and reporting mobile application powered by AWS serverless technologies.
 
-A Flutter-based mobile application designed to predict flood risks and provide early warning information to users in Nigeria using machine learning and cloud technologies.
+FloodGuard helps users monitor weather conditions, assess flood risks, and report flood incidents with images and location details.
 
+---
 
-## Project Overview
+# 📱 Features
 
+## 🌦 Real-Time Weather Monitoring
+- Fetches current weather conditions
+- Displays temperature, humidity and weather status
+- Uses user location for weather updates
 
-Flooding is a major environmental challenge in Nigeria, affecting communities, infrastructure, and lives. This application provides users with flood risk predictions, weather information, alerts, and safety recommendations.
+## 🚨 Flood Risk Monitoring
+- Displays current flood risk level
+- Provides safety recommendations during dangerous conditions
 
+## 📸 Flood Incident Reporting
+Users can:
+- Upload flood images
+- Add descriptions
+- Select flood severity
+- Submit incident reports
 
-## Features
+## ☁️ Cloud Image Storage
+Flood images are uploaded securely using:
+- Amazon S3
+- Lambda generated pre-signed URLs
 
+## 📋 My Reports Dashboard
+Users can:
+- View previously submitted flood reports
+- See report details and timestamps
 
-- User authentication
-- Real-time flood risk monitoring
-- Machine learning-based flood prediction
-- Weather data integration
-- Interactive flood risk map
-- Flood reporting system
-- Emergency notifications
-- Safety guidelines
+## 👤 User Profile
+Includes:
+- User information
+- App settings
+- Logout functionality
 
+## 📸 Screenshots
 
-## Technology Stack
+### Home Dashboard
+![Dashboard](screenshots/dashboard.png)
 
+### Flood Report
+![Report](screenshots/report.png)
 
-### Mobile Application
-- Flutter
-- Dart
+### My Reports
+![My Reports](screenshots/my_reports.png)
 
+### Profile
+![Profile](screenshots/profile.png)
 
-### Backend
-- Python FastAPI
-
-
-### Machine Learning
-- Python
-- Scikit-learn
-- Pandas
-- NumPy
-
-
-### Cloud & DevOps
-- AWS
-- GitHub Actions
-- CI/CD
-
-
-## Project Status
-
-
-🚧 Currently under development
-
-
-## Author
-
-
-Chisomaga Anyasodor 
