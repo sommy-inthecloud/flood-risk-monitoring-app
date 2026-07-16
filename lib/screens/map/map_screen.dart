@@ -1,72 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
+
+  @override
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  final LatLng initialPosition = const LatLng(6.5244, 3.3792); // Lagos
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Flood Risk Map")),
-
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            const Text(
-              "Flood Risk Map",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 20),
-
-            Container(
-              height: 300,
-              width: double.infinity,
-
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(20),
-              ),
-
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.map, size: 70, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text(
-                      "Google Maps Integration\nComing Soon",
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            const Card(
-              child: ListTile(
-                leading: Icon(Icons.location_on, color: Colors.red),
-                title: Text("Current Location"),
-                subtitle: Text("Ikeja, Lagos"),
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            const Card(
-              child: ListTile(
-                leading: Icon(Icons.warning, color: Colors.orange),
-                title: Text("Current Flood Risk"),
-                subtitle: Text("Medium Risk"),
-              ),
-            ),
-          ],
+      appBar: AppBar(title: const Text("Flood Map")),
+      body: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: initialPosition,
+          zoom: 12,
         ),
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
       ),
     );
   }

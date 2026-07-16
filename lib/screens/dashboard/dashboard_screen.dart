@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../map/map_screen.dart';
 import '../report/report_screen.dart';
 import '../profile/profile_screen.dart';
+
 import '../../models/weather_model.dart';
 import '../../services/weather_service.dart';
 import '../../services/location_service.dart';
@@ -44,23 +45,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
 
         selectedItemColor: Colors.blue,
+
         unselectedItemColor: Colors.grey,
-
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-
-        backgroundColor: Colors.white,
 
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+
           BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
+
           BottomNavigationBarItem(icon: Icon(Icons.report), label: "Report"),
+
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
   }
 }
-// ---------------- HOME SCREEN ----------------
+
+// ================= HOME SCREEN =================
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -71,22 +73,44 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<WeatherModel> weather;
-  Future<void> getLocationWeather() async {
-    final position = await LocationService().getCurrentLocation();
 
-    setState(() {
-      weather = WeatherService().getWeather(
-        position.latitude,
-        position.longitude,
-      );
-    });
-  }
+  String floodRisk = "Calculating...";
+
+  String riskProbability = "";
 
   @override
   void initState() {
     super.initState();
 
     getLocationWeather();
+  }
+
+  Future<void> getLocationWeather() async {
+    final position = await LocationService().getCurrentLocation();
+
+    setState(() {
+      weather = WeatherService().getWeather(
+        position.latitude,
+
+        position.longitude,
+      );
+    });
+  }
+
+  void calculateFloodRisk(WeatherModel data) {
+    if (data.humidity >= 85) {
+      floodRisk = "HIGH RISK";
+
+      riskProbability = "85% probability based on current conditions";
+    } else if (data.humidity >= 60) {
+      floodRisk = "MEDIUM RISK";
+
+      riskProbability = "65% probability based on current conditions";
+    } else {
+      floodRisk = "LOW RISK";
+
+      riskProbability = "30% probability based on current conditions";
+    }
   }
 
   @override
@@ -123,26 +147,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
 
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    Icon(Icons.water_drop, color: Colors.white, size: 40),
+                    const Icon(Icons.water_drop, color: Colors.white, size: 40),
 
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                    Text(
+                    const Text(
                       "Flood Risk Status",
 
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     Text(
-                      "MEDIUM RISK",
+                      floodRisk,
 
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
 
                         fontSize: 28,
@@ -151,12 +175,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
                     Text(
-                      "65% probability based on current conditions",
+                      riskProbability,
 
-                      style: TextStyle(color: Colors.white70),
+                      style: const TextStyle(color: Colors.white70),
                     ),
                   ],
                 ),
@@ -166,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const Text(
                 "Weather Today",
+
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
 
@@ -176,37 +201,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Center(child: CircularProgressIndicator()),
-                      ),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
-                    return const Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text("Unable to load weather"),
-                      ),
-                    );
+                    return const Text("Unable to load weather");
                   }
 
                   final data = snapshot.data!;
+
+                  calculateFloodRisk(data);
 
                   return Card(
                     child: ListTile(
                       leading: const Icon(
                         Icons.cloud,
+
                         size: 40,
+
                         color: Colors.blue,
                       ),
 
                       title: Text(
                         "${data.temperature.toStringAsFixed(1)}°C",
+
                         style: const TextStyle(
                           fontSize: 22,
+
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -218,6 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
+
+              const SizedBox(height: 20),
 
               const Text(
                 "Safety Tips",

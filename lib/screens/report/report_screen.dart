@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../services/image_service.dart';
-
 import '../../services/upload_service.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -28,8 +27,19 @@ class _ReportScreenState extends State<ReportScreen> {
 
   bool isUploading = false;
 
+  @override
+  void dispose() {
+    descriptionController.dispose();
+
+    locationController.dispose();
+
+    super.dispose();
+  }
+
   Future<void> submitReport() async {
     if (selectedImage == null) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select a flood image first")),
       );
@@ -52,24 +62,40 @@ class _ReportScreenState extends State<ReportScreen> {
         location: locationController.text,
       );
 
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Image uploaded successfully: $imageName")),
+        SnackBar(content: Text("Report uploaded successfully: $imageName")),
       );
+
+      descriptionController.clear();
+
+      locationController.clear();
+
+      setState(() {
+        selectedImage = null;
+
+        severity = "Medium";
+      });
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Upload failed: $e")));
     } finally {
-      setState(() {
-        isUploading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isUploading = false;
+        });
+      }
     }
   }
 
   Future<void> pickFloodImage() async {
     final image = await imageService.pickImage();
 
-    if (image != null) {
+    if (image != null && mounted) {
       setState(() {
         selectedImage = image;
       });
@@ -90,6 +116,7 @@ class _ReportScreenState extends State<ReportScreen> {
           children: [
             const Text(
               "Report a Flood Incident",
+
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
@@ -178,9 +205,11 @@ class _ReportScreenState extends State<ReportScreen> {
               ],
 
               onChanged: (value) {
-                setState(() {
-                  severity = value!;
-                });
+                if (value != null) {
+                  setState(() {
+                    severity = value;
+                  });
+                }
               },
             ),
 
@@ -188,7 +217,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
             TextField(
               controller: locationController,
-              decoration: InputDecoration(
+
+              decoration: const InputDecoration(
                 labelText: "Location",
 
                 prefixIcon: Icon(Icons.location_on),
@@ -201,10 +231,22 @@ class _ReportScreenState extends State<ReportScreen> {
 
             SizedBox(
               width: double.infinity,
+
               child: ElevatedButton(
                 onPressed: isUploading ? null : submitReport,
+
                 child: isUploading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const SizedBox(
+                        height: 20,
+
+                        width: 20,
+
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+
+                          strokeWidth: 2,
+                        ),
+                      )
                     : const Text("SUBMIT REPORT"),
               ),
             ),
