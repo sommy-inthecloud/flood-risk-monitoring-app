@@ -196,20 +196,25 @@ Used for:
 
 # 📂 Project Structure
 
+```text
 lib/
+│
 ├── models/
- ├── screens/
- │   ├── dashboard/
- │   ├── report/
- │   ├── profile/
- │   └── my_reports/
- │
- ├── services/
- │   ├── weather_service.dart
- │   ├── upload_service.dart
- │   └── location_service.dart
- │
- └── main.dart
+│
+├── screens/
+│   ├── dashboard/
+│   ├── report/
+│   ├── profile/
+│   └── my_reports/
+│
+├── services/
+│   ├── weather_service.dart
+│   ├── upload_service.dart
+│   └── location_service.dart
+│
+└── main.dart
+```
+
 
 # 🚀 Installation
 
